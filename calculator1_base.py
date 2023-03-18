@@ -1,3 +1,14 @@
+""" This code defines four basic arithmetic functions: add, subtract, multiply, and divide. 
+    The add function takes two arguments, x and y, and returns their sum. 
+    The subtract function takes two arguments, x and y, and returns their difference. 
+    The multiply function takes two arguments, x and y, and returns their product. 
+    The divide function takes two arguments, x and y, and returns their quotient.
+The program then displays a menu for the user to select which operation they want to perform: add, subtract, multiply, or divide. 
+    It prompts the user to enter two numbers and then calls the appropriate function based on the user's selection.
+    If the user selects "1" for addition, the program calls the add function with the two numbers and prints the result. 
+    If the user selects "2" for subtraction, the program calls the subtract function and so on.
+    If the user enters an invalid choice, the program prints "Invalid input". """
+
 # This function adds two numbers
 def add(x, y):
     return x + y
