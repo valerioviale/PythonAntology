@@ -11,7 +11,6 @@ pygame.display.set_caption("Bouncing Balls")
 
 # Ball parameters
 ball_radius = 20
-ball_color = (255, 0, 0)
 balls = []
 
 # Ball class
@@ -37,13 +36,18 @@ class Ball:
     def draw(self):
         pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
 
-# Create initial balls
+# Function to generate a random color
+def random_color():
+    return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+# Create initial balls with random colors
 for _ in range(5):
     x = random.randint(ball_radius, WIDTH - ball_radius)
     y = random.randint(ball_radius, HEIGHT - ball_radius)
     x_speed = random.choice([-5, 5])
     y_speed = random.choice([-5, 5])
-    ball = Ball(x, y, ball_radius, ball_color, x_speed, y_speed)
+    color = random_color()
+    ball = Ball(x, y, ball_radius, color, x_speed, y_speed)
     balls.append(ball)
 
 # Main game loop
