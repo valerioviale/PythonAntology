@@ -6,7 +6,7 @@ import math
 pygame.init()
 
 # Screen dimensions
-WIDTH, HEIGHT = 1400, 800
+WIDTH, HEIGHT = 1250, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Bouncing Balls")
 
@@ -62,7 +62,7 @@ def random_color():
     return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 # Create initial balls with random colors and slower speeds
-for _ in range(5):
+for _ in range(6):
     x = random.randint(ball_radius, WIDTH - ball_radius)
     y = random.randint(ball_radius, HEIGHT - ball_radius)
     x_speed = random.uniform(-1.0, 1.0) * 1  # Adjust the factor for slower/faster balls
@@ -73,7 +73,7 @@ for _ in range(5):
 
 # Main game loop
 running = True
-message_displayed = False  # To track if "Te Amo Elena" has been displayed
+message_displayed = False  # To track if "Message" has been displayed
 message_display_time = None
 
 while running:
@@ -90,8 +90,8 @@ while running:
         ball.draw()
 
         if not message_displayed and ball.wall_bounces + ball.ball_bounces >= 15:
-            message_font = pygame.font.Font(None, 250)
-            message_text = message_font.render(" A Message ", True, (255, 255, 255))
+            message_font = pygame.font.Font(None, 150)
+            message_text = message_font.render(" Message ", True, (255, 255, 255))
             message_rect = message_text.get_rect()
             message_rect.center = (WIDTH // 2, HEIGHT // 2)
             screen.fill((0, 0, 0))  # Clear the screen
@@ -102,7 +102,7 @@ while running:
             pygame.time.delay(50000)  # Pause for 10 seconds
 
         if message_displayed and pygame.time.get_ticks() - message_display_time >= 10000:
-            # Display "Te Amo Elena" for 10 seconds
+            # Display "Message" for 10 seconds
             running = False
 
     pygame.display.update()
