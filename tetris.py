@@ -1,6 +1,5 @@
 import pygame
 import random
-import pygame.transform
 
 # Initialize pygame
 pygame.init()
@@ -11,8 +10,11 @@ WINDOW_SIZE = (WIDTH, HEIGHT)
 GRID_SIZE = 30
 GRID_WIDTH = WIDTH // GRID_SIZE
 GRID_HEIGHT = HEIGHT // GRID_SIZE
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+WHITE = (200, 200, 200)
+GREY = (128, 128, 128)
+LIGHT_GREY= (140, 140, 140)
+BLACK = (10, 10, 10)
+FUCHSIA = (255, 0, 255)
 
 # Tetrominoes
 tetrominoes = [
@@ -38,12 +40,21 @@ current_tetromino = None
 current_tetromino_color = None
 x, y = 0, 0
 
-# Functions
+# Points system
+score = 0
+score_to_change_color = 5  # Change the color every 5 points
+background_color = BLACK
 
+# Create a font for displaying points
+font = pygame.font.Font(None, 36)
+
+# Create a shadow color for tetrominos
+shadow_color = GREY
+
+# Functions
 def rotate_tetromino():
     global current_tetromino
     current_tetromino = [list(row) for row in zip(*current_tetromino[::-1])]
-
 
 def draw_grid():
     for row in range(GRID_HEIGHT):
@@ -54,8 +65,12 @@ def draw_grid():
     for row in range(len(current_tetromino)):
         for col in range(len(current_tetromino[row])):
             if current_tetromino[row][col]:
+                # Draw the main part of the tetromino
                 pygame.draw.rect(screen, current_tetromino_color,
                                  pygame.Rect((x + col) * GRID_SIZE, (y + row) * GRID_SIZE, GRID_SIZE, GRID_SIZE), 0)
+                # Draw a shadow to give volume
+                pygame.draw.rect(screen, shadow_color,
+                                 pygame.Rect((x + col) * GRID_SIZE, (y + row) * GRID_SIZE, GRID_SIZE, GRID_SIZE), 2)
 
 def new_tetromino():
     global current_tetromino, current_tetromino_color, x, y
@@ -77,8 +92,10 @@ def place_tetromino():
         for col in range(len(current_tetromino[row])):
             if current_tetromino[row][col]:
                 grid[y + row][x + col] = tetromino_colors.index(current_tetromino_color) + 1
+    check_lines()  # Add this line to check and clear completed lines
 
 def check_lines():
+    global score
     full_lines = []
     for row in range(GRID_HEIGHT):
         if all(grid[row]):
@@ -86,6 +103,7 @@ def check_lines():
     for row in full_lines:
         del grid[row]
         grid.insert(0, [0] * GRID_WIDTH)
+        score += 10
 
 # Main game loop
 clock = pygame.time.Clock()
@@ -118,40 +136,21 @@ while not game_over:
     if collide():
         y -= 1
         place_tetromino()
-        check_lines()
+        score += 1
+        if score % 5 == 0:  # Change the background color every 5 points
+            background_color = random.choice([BLACK, LIGHT_GREY, WHITE])
         new_tetromino()
         if collide():
             game_over = True
 
-    screen.fill(WHITE)
+    screen.fill(background_color)  # Set the background color
     draw_grid()
+
+    # Display the points in the top left corner
+    text = font.render("Points: " + str(score), True, FUCHSIA)
+    screen.blit(text, (10, 10))
+
     pygame.display.update()
     clock.tick(5)
-
-
-while not game_over:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            game_over = True
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                x -= 1
-                if collide():
-                    x += 1
-            if event.key == pygame.K_RIGHT:
-                x += 1
-                if collide():
-                    x -= 1
-            if event.key == pygame.K_DOWN:
-                y += 1
-                if collide():
-                    y -= 1
-            if event.key == pygame.K_UP:  # Rotate the Tetromino when the UP arrow key is pressed
-                rotate_tetromino()
-                if collide():
-                    rotate_tetromino()
-
-
-
 
 pygame.quit()
